@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule} from 'angularfire2/auth'
 import { SignupPage } from '../pages/signup/signup';
+import { ContactPage } from '../pages/contact/contact';
 
   // Initialize Firebase
   const config = {
@@ -32,7 +33,8 @@ import { SignupPage } from '../pages/signup/signup';
     SigninPage,
     RoomPage,
     AddRoomPage,
-    SignupPage
+    SignupPage,
+    ContactPage
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { SignupPage } from '../pages/signup/signup';
   bootstrap: [IonicApp],
   entryComponents: [
     SignupPage,
+    ContactPage,
     MyApp,
     HomePage,
     SigninPage,

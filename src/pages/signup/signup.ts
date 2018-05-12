@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { SigninPage } from '../signin/signin';
+import * as firebase from 'firebase';
+import { Contact } from '../../models/Contact';
 /**
  * Generated class for the SignupPage page.
  *
@@ -15,6 +17,8 @@ import { SigninPage } from '../signin/signin';
   templateUrl: 'signup.html',
 })
 export class SignupPage {
+
+  contactsRef = firebase.database().ref('contacts/');
 
   data = { 
     displayName: '',
@@ -30,10 +34,14 @@ export class SignupPage {
   ionViewDidLoad() {}
 
   signUp() {
+    // Create a new contact and insert it into database.
+    const newContact = new Contact(this.data.displayName, this.data.email);
+
     this.afAuth.auth
         .createUserWithEmailAndPassword(this.data.email, this.data.password)
-        .then(firebaseUser => {
-          console.log(firebaseUser);
+        .then(firebaseUser => { 
+          this.contactsRef.push(newContact);
+          
           firebaseUser.updateProfile({
             displayName: this.data.displayName
           });

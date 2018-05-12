@@ -65,6 +65,7 @@ exitChat() {
   });
 }
 }
+
 export const snapshotToArray = snapshot => {
   let returnArr = [];
 

@@ -15,7 +15,7 @@ import { SignupPage } from '../pages/signup/signup';
 })
 export class MyApp {
   // rootPage:any = HomePage;
-  rootPage:any = SigninPage;
+  rootPage:any = SignupPage;
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
