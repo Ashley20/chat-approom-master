@@ -5,15 +5,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import * as firebase from 'firebase';
 import { HomePage } from '../pages/home/home';
 import {SigninPage} from "../pages/signin/signin";
+import { SignupPage } from '../pages/signup/signup';
 
-const config = {
-  apiKey: 'AIzaSyDW-f4sDiqnDeC-kW2e1IwPtt7R5wok9NU',
-  authDomain: 'ionic-3d4b2.firebaseapp.com',
-  databaseURL: 'https://ionic-3d4b2.firebaseio.com',
-  projectId: 'ionic-3d4b2',
-  storageBucket: 'ionic-3d4b2.appspot.com',
-  messagingSenderId: "79259007060"
-};
+
+  
 
 @Component({
   templateUrl: 'app.html'
@@ -28,6 +23,5 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
-    firebase.initializeApp(config);
    }
 }

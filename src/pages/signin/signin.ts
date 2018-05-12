@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RoomPage } from  '../room/room';
+import { AngularFireAuth } from 'angularfire2/auth';
 /**
  * Generated class for the SigninPage page.
  *
@@ -14,16 +15,24 @@ import { RoomPage } from  '../room/room';
   templateUrl: 'signin.html',
 })
 export class SigninPage {
-  data = { nickname:"" };
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  data = { 
+    email: '',
+    password: ''
+  };
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SigninPage');
-  }
-  enterNickname() {
-    this.navCtrl.setRoot(RoomPage, {
-      nickname: this.data.nickname
-    });
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams,
+    private afAuth: AngularFireAuth) {}
+
+  ionViewDidLoad() {}
+  signIn() {
+    this.afAuth.auth
+        .signInWithEmailAndPassword(this.data.email, this.data.password)
+        .then(user => {
+          console .log(user);
+          this.navCtrl.setRoot(RoomPage, {
+            nickname: user.displayName
+          });
+        })
   }
 }
