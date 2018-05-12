@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RoomPage } from  '../room/room';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { ContactPage } from '../contact/contact';
 /**
  * Generated class for the SigninPage page.
  *
@@ -29,8 +30,7 @@ export class SigninPage {
     this.afAuth.auth
         .signInWithEmailAndPassword(this.data.email, this.data.password)
         .then(user => {
-          console .log(user);
-          this.navCtrl.setRoot(RoomPage, {
+          this.navCtrl.setRoot(ContactPage, {
             nickname: user.displayName
           });
         })

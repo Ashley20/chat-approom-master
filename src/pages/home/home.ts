@@ -2,34 +2,38 @@ import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, Content } from 'ionic-angular';
 import { RoomPage } from '../room/room';
 import * as firebase from 'Firebase';
+import { ContactPage } from '../contact/contact';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
+
 export class HomePage {
   @ViewChild(Content) content: Content;
-data = { type:'', nickname:'', message:'' };
-chats = [];
-roomkey:string;
-nickname:string;
-offStatus:boolean = false;
+
+  data = { 
+    type:'', 
+    nickname:'', 
+    message:'' 
+  };
+  buddy: string;
+
+  chats = [];
+  roomkey:string;
+  nickname:string;
+  offStatus:boolean = false;
+
 constructor(public navCtrl: NavController, public navParams: NavParams) {
   this.roomkey = this.navParams.get("key") as string;
-  this.nickname = this.navParams.get("nickname") as string;
+  this.data.nickname = this.navParams.get("nickname") as string;
+  this.buddy = this.navParams.get("buddy") as string;
   this.data.type = 'message';
-  this.data.nickname = this.nickname;
+  this.data.nickname = firebase.auth().currentUser.displayName;
+  this.nickname = firebase.auth().currentUser.displayName;
 
-  let joinData = firebase.database().ref('chatrooms/'+this.roomkey+'/chats').push();
-  joinData.set({
-    type:'join',
-    user:this.nickname,
-    message:this.nickname+' has joined this room.',
-    sendDate:Date()
-  });
-  this.data.message = '';
 
-  firebase.database().ref('chatrooms/'+this.roomkey+'/chats').on('value', resp => {
+  firebase.database().ref('privatechat/'+this.roomkey+'/chats').on('value', resp => {
     this.chats = [];
     this.chats = snapshotToArray(resp);
     setTimeout(() => {
@@ -39,41 +43,43 @@ constructor(public navCtrl: NavController, public navParams: NavParams) {
     }, 1000);
   });
 }
-sendMessage() {
-  let newData = firebase.database().ref('chatrooms/'+this.roomkey+'/chats').push();
-  newData.set({
-    type:this.data.type,
-    user:this.data.nickname,
-    message:this.data.message,
-    sendDate:Date()
-  });
-  this.data.message = '';
+
+  sendMessage() {
+    let newData = firebase.database().ref('privatechat/'+this.roomkey+'/chats').push();
+    newData.set({
+      type:this.data.type,
+      user:this.data.nickname,
+      message:this.data.message,
+      sendDate:Date()
+    });
+    this.data.message = '';
+  }
+
+  exitChat() {
+    let exitData = firebase.database().ref('privatechats/'+this.roomkey+'/chats').push();
+    exitData.set({
+      type:'exit',
+      user:this.nickname,
+      message:' has exited this room.',
+      sendDate:Date()
+    });
+
+    this.offStatus = true;
+
+    this.navCtrl.setRoot(ContactPage, {
+      nickname:this.nickname
+    });
+  }
 }
-exitChat() {
-  let exitData = firebase.database().ref('chatrooms/'+this.roomkey+'/chats').push();
-  exitData.set({
-    type:'exit',
-    user:this.nickname,
-    message:this.nickname+' has exited this room.',
-    sendDate:Date()
-  });
 
-  this.offStatus = true;
+  export const snapshotToArray = snapshot => {
+    let returnArr = [];
 
-  this.navCtrl.setRoot(RoomPage, {
-    nickname:this.nickname
-  });
-}
-}
+    snapshot.forEach(childSnapshot => {
+        let item = childSnapshot.val();
+        item.key = childSnapshot.key;
+        returnArr.push(item);
+    });
 
-export const snapshotToArray = snapshot => {
-  let returnArr = [];
-
-  snapshot.forEach(childSnapshot => {
-      let item = childSnapshot.val();
-      item.key = childSnapshot.key;
-      returnArr.push(item);
-  });
-
-  return returnArr;
-};
+    return returnArr;
+  };
